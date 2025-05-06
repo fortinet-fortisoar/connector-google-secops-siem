@@ -1,3 +1,10 @@
+"""
+Copyright start
+MIT License
+Copyright (c) 2025 Fortinet Inc
+Copyright end
+"""
+
 from connectors.core.connector import Connector
 from connectors.core.connector import get_logger, ConnectorError
 from django.utils.module_loading import import_string
@@ -29,12 +36,13 @@ def check_health(config: dict, params: dict = None):
     try:
         client_obj = GoogleSecOpsSIEM(config, get_service_account_file_path(config))
         url = (
-            client_obj.get_region_url(config.get("regionalEndpoint"), "chronicle")
-            + f'/v1alpha/projects/{config.get("projectID")}/locations/{config.get("regionalEndpoint")}/instances/{config.get("instanceID")}/legacy:legacyFetchAlertsView'
+                client_obj.get_region_url(config.get("regionalEndpoint"), "chronicle")
+                + f'/v1alpha/projects/{config.get("projectID")}/locations/{config.get("regionalEndpoint")}/instances/{config.get("instanceID")}/legacy:legacyFetchAlertsView'
         )
         startTime = (datetime.now() - timedelta(days=7)).strftime("%Y-%m-%dT%H:%M:%SZ")
         endTime = datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
-        payload = {"alertListOptions.maxReturnedAlerts": 1, "timeRange.startTime": startTime, "timeRange.endTime": endTime}
+        payload = {"alertListOptions.maxReturnedAlerts": 1, "timeRange.startTime": startTime,
+                   "timeRange.endTime": endTime}
         response = client_obj.http_session.request("GET", url, params=payload)
         if response.status_code == 200:
             return response.json()
@@ -47,9 +55,11 @@ def check_health(config: dict, params: dict = None):
 def execute_api_endpoint(config, params):
     try:
         client_obj = GoogleSecOpsSIEM(config, get_service_account_file_path(config))
-        url = client_obj.get_region_url(config.get("regionalEndpoint"), params.get("apidomain")) + params.get("api_endpoint")
+        url = client_obj.get_region_url(config.get("regionalEndpoint"), params.get("apidomain")) + params.get(
+            "api_endpoint")
         method = params.get("method")
-        payload = json.loads(params.get("params")) if isinstance(params.get("params"), str) else params.get("params", dict())
+        payload = json.loads(params.get("params")) if isinstance(params.get("params"), str) else params.get("params",
+                                                                                                            dict())
         payload = {k: v for k, v in payload.items() if v is not None and v != ""} if isinstance(payload, dict) else None
         data = params.get("data")
         response = client_obj.http_session.request(method, url, params=payload, data=data)
@@ -65,8 +75,8 @@ def legacyfetchalertsview(config, params):
     try:
         client_obj = GoogleSecOpsSIEM(config, get_service_account_file_path(config))
         url = (
-            client_obj.get_region_url(config.get("regionalEndpoint"), "chronicle")
-            + f'/v1alpha/projects/{config.get("projectID")}/locations/{config.get("regionalEndpoint")}/instances/{config.get("instanceID")}/legacy:legacyFetchAlertsView'
+                client_obj.get_region_url(config.get("regionalEndpoint"), "chronicle")
+                + f'/v1alpha/projects/{config.get("projectID")}/locations/{config.get("regionalEndpoint")}/instances/{config.get("instanceID")}/legacy:legacyFetchAlertsView'
         )
         method = "GET"
         payload = {
@@ -89,8 +99,8 @@ def legacygetalert(config, params):
     try:
         client_obj = GoogleSecOpsSIEM(config, get_service_account_file_path(config))
         url = (
-            client_obj.get_region_url(config.get("regionalEndpoint"), "chronicle")
-            + f'/v1alpha/projects/{config.get("projectID")}/locations/{config.get("regionalEndpoint")}/instances/{config.get("instanceID")}/legacy:legacyGetAlert'
+                client_obj.get_region_url(config.get("regionalEndpoint"), "chronicle")
+                + f'/v1alpha/projects/{config.get("projectID")}/locations/{config.get("regionalEndpoint")}/instances/{config.get("instanceID")}/legacy:legacyGetAlert'
         )
         method = "GET"
         payload = {
@@ -110,7 +120,8 @@ def legacygetalert(config, params):
 def udm_search(config, params):
     try:
         client_obj = GoogleSecOpsSIEM(config, get_service_account_file_path(config))
-        url = client_obj.get_region_url(config.get("regionalEndpoint"), "backstory") + f'/v1/{params.get("udm_type")}:udmSearch'
+        url = client_obj.get_region_url(config.get("regionalEndpoint"),
+                                        "backstory") + f'/v1/{params.get("udm_type")}:udmSearch'
         payload = {
             "query": params.get("query"),
             "time_range.start_time": params.get("time_range.start_time"),

@@ -1,0 +1,1054 @@
+{
+  "type": "workflow_collections",
+  "data": [
+    {
+      "@type": "WorkflowCollection",
+      "name": "Sample - Google SecOps SIEM - 1.0.0",
+      "description": "Sample playbooks for \"Google SecOps SIEM\" connector. If you are planning to use any of the sample playbooks in your environment, ensure that you clone those playbooks and move them to a different collection, since the sample playbook collection gets deleted during connector upgrade and delete.",
+      "visible": true,
+      "image": null,
+      "uuid": "caa0bbda-0886-46f5-b745-d0f3518e7a2e",
+      "id": 120,
+      "deletedAt": null,
+      "importedBy": [],
+      "recordTags": [
+        "dataingestion",
+        "google-secops-siem"
+      ],
+      "workflows": [
+        {
+          "@type": "Workflow",
+          "triggerLimit": null,
+          "name": "Google SecOps SIEM > Ingest",
+          "aliasName": null,
+          "tag": null,
+          "description": null,
+          "isActive": true,
+          "debug": true,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": false,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1739754780,
+          "collection": "/api/3/workflow_collections/caa0bbda-0886-46f5-b745-d0f3518e7a2e",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/e2ce0310-43b0-4e28-a58b-52eb558c51e8",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Configure",
+              "description": null,
+              "arguments": {
+                "macro_name": "google_secops_siem_{{vars['audit_info']['cyops_playbook_iri'].split('/')[-1].replace('-', '_')}}",
+                "current_datetime": "{{arrow.utcnow().format(\"YYYY-MM-DDTHH:mm:ss\")}}Z"
+              },
+              "status": null,
+              "top": "165",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+              "group": null,
+              "uuid": "a9008ec3-a4a7-4791-a65a-45410092b9d0"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Create Events",
+              "description": null,
+              "arguments": {
+                "arguments": {
+                  "datas": "{{vars.steps.Fetch.data}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "/api/3/workflows/42d10386-42d6-4121-9612-d88ccd9629ca"
+              },
+              "status": null,
+              "top": "435",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+              "group": null,
+              "uuid": "05e65636-112b-4497-b643-ca1acf6ec4ea"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Fetch",
+              "description": null,
+              "arguments": {
+                "arguments": {
+                  "macro_name": "{{vars.macro_name}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "/api/3/workflows/ca1cd7f3-850c-4ae6-b9fd-28a816058dc5"
+              },
+              "status": null,
+              "top": "300",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+              "group": null,
+              "uuid": "d5e7ab1a-49f5-4354-acda-aa786bc2fe19"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                  "input": {
+                    "params": []
+                  }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+              },
+              "status": null,
+              "top": "30",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "e2ce0310-43b0-4e28-a58b-52eb558c51e8"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Update Last Alert Pull Time",
+              "description": null,
+              "arguments": {
+                "params": {
+                  "macro": "{{vars.macro_name}}",
+                  "value": "{{vars.current_datetime}}"
+                },
+                "version": "3.5.0",
+                "connector": "cyops_utilities",
+                "operation": "updatemacro",
+                "operationTitle": "FSR: Update Global Variables",
+                "step_variables": []
+              },
+              "status": null,
+              "top": "570",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/0109f35d-090b-4a2b-bd8a-94cbc3508562",
+              "group": null,
+              "uuid": "ea7206b7-9baf-4037-ac56-a7b69b67024c"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Configure -> Fetch",
+              "targetStep": "/api/3/workflow_steps/d5e7ab1a-49f5-4354-acda-aa786bc2fe19",
+              "sourceStep": "/api/3/workflow_steps/a9008ec3-a4a7-4791-a65a-45410092b9d0",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "665b7e7c-0ea2-4bb5-ba54-4cf423866350"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Create Events -> Update Last Alert Pull Time",
+              "targetStep": "/api/3/workflow_steps/ea7206b7-9baf-4037-ac56-a7b69b67024c",
+              "sourceStep": "/api/3/workflow_steps/05e65636-112b-4497-b643-ca1acf6ec4ea",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "e8e54292-405e-4bc5-94f9-bbfdb1e03060"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Fetch -> Create Events",
+              "targetStep": "/api/3/workflow_steps/05e65636-112b-4497-b643-ca1acf6ec4ea",
+              "sourceStep": "/api/3/workflow_steps/d5e7ab1a-49f5-4354-acda-aa786bc2fe19",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "f233f909-e889-440a-a0fd-55f3edf9f90f"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Configure",
+              "targetStep": "/api/3/workflow_steps/a9008ec3-a4a7-4791-a65a-45410092b9d0",
+              "sourceStep": "/api/3/workflow_steps/e2ce0310-43b0-4e28-a58b-52eb558c51e8",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "24b464b7-c00f-4818-b0aa-0597da4449e2"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+          "playbookOrigin": "/api/3/picklists/15c1e8c9-22bf-4e66-8fbb-0a502d4a4a3f",
+          "isEditable": true,
+          "uuid": "01035f5d-7a09-4dce-9f9d-191cf32be728",
+          "id": 2179,
+          "owners": [],
+          "isPrivate": false,
+          "deletedAt": null,
+          "importedBy": [],
+          "recordTags": [
+            "dataingestion",
+            "google-secops-siem",
+            "ingest"
+          ]
+        },
+        {
+          "@type": "Workflow",
+          "triggerLimit": null,
+          "name": "UDM Search",
+          "aliasName": null,
+          "tag": null,
+          "description": "It enables customers to programmatically complete a UDM Search query and retrieve matches.",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": false,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1746523797,
+          "collection": "/api/3/workflow_collections/caa0bbda-0886-46f5-b745-d0f3518e7a2e",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/877080ff-f7e2-4fc3-bf64-6003544cdbea",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "route": "b1c442b1-02ce-4d5a-8eab-dd4cd6f78bfd",
+                "title": "Google SecOps SIEM: UDM Search",
+                "resources": [
+                  "alerts"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
+                "step_variables": {
+                  "input": {
+                    "params": [],
+                    "records": "{{vars.input.records}}"
+                  }
+                },
+                "triggerOnSource": true,
+                "executeButtonText": "Execute",
+                "noRecordExecution": true,
+                "showToasterMessage": {
+                  "visible": false,
+                  "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
+              },
+              "status": null,
+              "top": "30",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+              "group": null,
+              "uuid": "877080ff-f7e2-4fc3-bf64-6003544cdbea"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "UDM Search",
+              "description": null,
+              "arguments": {
+                "name": "Google SecOps SIEM",
+                "config": "f42a5f3f-d43e-4b58-b27b-6dde7dc290b9",
+                "params": {
+                  "limit": 100,
+                  "query": "security_result.alert_state = \"ALERTING\"",
+                  "udm_type": "events",
+                  "time_range.end_time": "2025-05-05T18:30:00.000Z",
+                  "time_range.start_time": "2025-05-05T18:30:00.000Z"
+                },
+                "version": "1.0.0",
+                "connector": "google-secops-siem",
+                "operation": "udm_search",
+                "operationTitle": "UDM Search",
+                "pickFromTenant": false,
+                "step_variables": []
+              },
+              "status": null,
+              "top": "165",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "3af29675-51e2-4c98-ae12-9cfa3090c97a"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> UDM Search",
+              "targetStep": "/api/3/workflow_steps/3af29675-51e2-4c98-ae12-9cfa3090c97a",
+              "sourceStep": "/api/3/workflow_steps/877080ff-f7e2-4fc3-bf64-6003544cdbea",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "0eee27b4-48e7-4a75-89f1-4e448d280376"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+          "playbookOrigin": "/api/3/picklists/15c1e8c9-22bf-4e66-8fbb-0a502d4a4a3f",
+          "isEditable": true,
+          "uuid": "0971724c-b1a5-4dd7-8cf9-361399d310fd",
+          "id": 2185,
+          "owners": [],
+          "isPrivate": false,
+          "deletedAt": null,
+          "importedBy": [],
+          "recordTags": [
+            "google-secops-siem"
+          ]
+        },
+        {
+          "@type": "Workflow",
+          "triggerLimit": null,
+          "name": "Fetch Legacy Alerts View",
+          "aliasName": null,
+          "tag": null,
+          "description": "Retrieves a legacy alerts view from Google SecOps SIEM based on the input parameters that you have specified.",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": false,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1746523738,
+          "collection": "/api/3/workflow_collections/caa0bbda-0886-46f5-b745-d0f3518e7a2e",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/88325d24-589f-433f-8e4b-95fc20575c53",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Fetch Legacy Alerts View",
+              "description": null,
+              "arguments": {
+                "name": "Google SecOps SIEM",
+                "config": "f42a5f3f-d43e-4b58-b27b-6dde7dc290b9",
+                "params": {
+                  "baselineQuery": "",
+                  "timeRangeEndTime": "2025-05-05T18:30:00.000Z",
+                  "timeRangeStartTime": "2025-05-05T18:30:00.000Z",
+                  "alertListOptionsMaxReturnedAlerts": 100
+                },
+                "version": "1.0.0",
+                "connector": "google-secops-siem",
+                "operation": "legacyfetchalertsview",
+                "operationTitle": "Fetch Legacy Alerts View",
+                "pickFromTenant": false,
+                "step_variables": []
+              },
+              "status": null,
+              "top": "165",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "b68ab33a-8958-4a12-baac-2475be7353b8"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "route": "9bcf2062-0bf8-4034-9c0a-a258b72919b0",
+                "title": "Google SecOps SIEM: Fetch Legacy Alerts View",
+                "resources": [
+                  "alerts"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
+                "step_variables": {
+                  "input": {
+                    "params": [],
+                    "records": "{{vars.input.records}}"
+                  }
+                },
+                "triggerOnSource": true,
+                "executeButtonText": "Execute",
+                "noRecordExecution": true,
+                "showToasterMessage": {
+                  "visible": false,
+                  "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
+              },
+              "status": null,
+              "top": "30",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+              "group": null,
+              "uuid": "88325d24-589f-433f-8e4b-95fc20575c53"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Fetch Legacy Alerts View",
+              "targetStep": "/api/3/workflow_steps/b68ab33a-8958-4a12-baac-2475be7353b8",
+              "sourceStep": "/api/3/workflow_steps/88325d24-589f-433f-8e4b-95fc20575c53",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "a1ee8857-1336-4a41-b0cb-5fae17a3f863"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+          "playbookOrigin": "/api/3/picklists/15c1e8c9-22bf-4e66-8fbb-0a502d4a4a3f",
+          "isEditable": true,
+          "uuid": "300f96c2-d4be-4f04-b5cc-c68df2127b15",
+          "id": 2184,
+          "owners": [],
+          "isPrivate": false,
+          "deletedAt": null,
+          "importedBy": [],
+          "recordTags": [
+            "google-secops-siem"
+          ]
+        },
+        {
+          "@type": "Workflow",
+          "triggerLimit": null,
+          "name": "Google SecOps SIEM > Create",
+          "aliasName": null,
+          "tag": null,
+          "description": null,
+          "isActive": true,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": false,
+          "parameters": [
+            "datas"
+          ],
+          "synchronous": false,
+          "lastModifyDate": 1739776024,
+          "collection": "/api/3/workflow_collections/caa0bbda-0886-46f5-b745-d0f3518e7a2e",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/3269fd01-3d5b-4a9b-abba-f88114812990",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Configure",
+              "description": null,
+              "arguments": {
+                "category_map": "{1: \"Availability\", 2: \"Performance\", 3: \"Change\", 4: \"Security\", 5: \"Other\"}",
+                "alert_type_map": "{\"DoS\": {{\"AlertType\"| picklist(\"Denial of Service\")}}, \"Command and Control\": {{\"AlertType\"| picklist(\"Command and Control\")}}, \"Exfiltration\": {{\"AlertType\"| picklist(\"Data Exfiltration\")}}, \"Lateral Movement\": {{\"AlertType\"| picklist(\"Lateral Movement\")}}, \"Malware\": {{\"AlertType\"| picklist(\"Malware\")}}, \"Ransomware\": {{\"AlertType\"| picklist(\"Ransomware\")}}, \"Policy Violation\": {{\"AlertType\"| picklist(\"Policy Violation\")}}, \"Reconnaissance\": {{\"AlertType\"| picklist(\"Reconnaissance\")}}}"
+              },
+              "status": null,
+              "top": "165",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+              "group": null,
+              "uuid": "dd2e43ef-a653-4a06-9be1-d944b71a6b19"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Create Record",
+              "description": null,
+              "arguments": {
+                "for_each": {
+                  "item": "{{vars.input.params.datas or []}}",
+                  "__bulk": true,
+                  "parallel": false,
+                  "condition": "",
+                  "batch_size": 100
+                },
+                "resource": {
+                  "name": "{{vars.item[\"detection\"][0][\"ruleSetDisplayName\"] or vars.item[\"responsePlatformInfo\"][\"alertId\"]}}",
+                  "type": "{{vars.item[\"type\"] | resolveRange(vars.alerts_type_map)}}",
+                  "state": "/api/3/picklists/a1bac09b-1441-45aa-ad1b-c88744e48e72",
+                  "source": "Google SecOps SIEM",
+                  "status": "{{'AlertStatus' | picklist(vars.item[\"feedbackSummary\"][\"status\"])}}",
+                  "severity": "{{'Severity' | picklist(vars.item[\"feedbackSummary\"][\"severityDisplay\"])}}",
+                  "sourceId": "{{vars.item['id']}}",
+                  "__replace": "true",
+                  "deviceType": "{{vars.item[\"soarAlertMetadata\"][\"vendor\"] | resolveRange(vars.alerts_deviceType_map)}}",
+                  "sourcedata": "{{vars.item | toJSON}}",
+                  "ackSlaStatus": "/api/3/picklists/72979f64-e8b9-4888-a965-957e0ec24818",
+                  "respSlaStatus": "/api/3/picklists/72979f64-e8b9-4888-a965-957e0ec24818",
+                  "priorityWeight": 1,
+                  "escalatedtoincident": "/api/3/picklists/2128a09c-153d-4db3-985d-de6be33deae5",
+                  "resolvedAutomatedly": false,
+                  "alertRemainingAckSLA": 0
+                },
+                "_showJson": false,
+                "operation": "Overwrite",
+                "collection": "/api/3/upsert/alerts",
+                "__recommend": [],
+                "fieldOperation": {
+                  "recordTags": "Overwrite"
+                },
+                "step_variables": []
+              },
+              "status": null,
+              "top": "300",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/2597053c-e718-44b4-8394-4d40fe26d357",
+              "group": null,
+              "uuid": "b7c63496-b5d2-4fb7-b18c-1b7882c05e8e"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                  "input": {
+                    "params": []
+                  }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+              },
+              "status": null,
+              "top": "30",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "3269fd01-3d5b-4a9b-abba-f88114812990"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Configure -> Create Record",
+              "targetStep": "/api/3/workflow_steps/b7c63496-b5d2-4fb7-b18c-1b7882c05e8e",
+              "sourceStep": "/api/3/workflow_steps/dd2e43ef-a653-4a06-9be1-d944b71a6b19",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "8b748b80-965e-4e77-a104-5ee63d1f660f"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Configure",
+              "targetStep": "/api/3/workflow_steps/dd2e43ef-a653-4a06-9be1-d944b71a6b19",
+              "sourceStep": "/api/3/workflow_steps/3269fd01-3d5b-4a9b-abba-f88114812990",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "fad40fc1-5271-4a7e-b3d5-06062c8c816e"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+          "playbookOrigin": "/api/3/picklists/15c1e8c9-22bf-4e66-8fbb-0a502d4a4a3f",
+          "isEditable": true,
+          "uuid": "42d10386-42d6-4121-9612-d88ccd9629ca",
+          "id": 2180,
+          "owners": [],
+          "isPrivate": false,
+          "deletedAt": null,
+          "importedBy": [],
+          "recordTags": [
+            "create",
+            "dataingestion",
+            "google-secops-siem"
+          ]
+        },
+        {
+          "@type": "Workflow",
+          "triggerLimit": null,
+          "name": "Get Legacy Alert",
+          "aliasName": null,
+          "tag": null,
+          "description": "Retrieves a legacy alert from Google SecOps SIEM based on the input parameters that you have specified.",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": false,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1746523561,
+          "collection": "/api/3/workflow_collections/caa0bbda-0886-46f5-b745-d0f3518e7a2e",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/3bdfd776-c98b-48f2-8c00-40e2b34e394a",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Get Legacy Alert",
+              "description": null,
+              "arguments": {
+                "name": "Google SecOps SIEM",
+                "config": "f42a5f3f-d43e-4b58-b27b-6dde7dc290b9",
+                "params": {
+                  "alertId": "sa_00000000-0000-0000-0000-000000000000",
+                  "includeDetections": false
+                },
+                "version": "1.0.0",
+                "connector": "google-secops-siem",
+                "operation": "legacygetalert",
+                "operationTitle": "Get Legacy Alert",
+                "pickFromTenant": false,
+                "step_variables": []
+              },
+              "status": null,
+              "top": "165",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "1f6fe5f3-df3a-42ea-be35-4686dd41e382"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "route": "b03de370-bd7e-4464-976c-241f7d1c0144",
+                "title": "Google SecOps SIEM: Get Legacy Alert",
+                "resources": [
+                  "alerts"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
+                "step_variables": {
+                  "input": {
+                    "params": [],
+                    "records": "{{vars.input.records}}"
+                  }
+                },
+                "triggerOnSource": true,
+                "executeButtonText": "Execute",
+                "noRecordExecution": true,
+                "showToasterMessage": {
+                  "visible": false,
+                  "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
+              },
+              "status": null,
+              "top": "30",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+              "group": null,
+              "uuid": "3bdfd776-c98b-48f2-8c00-40e2b34e394a"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Get Legacy Alert",
+              "targetStep": "/api/3/workflow_steps/1f6fe5f3-df3a-42ea-be35-4686dd41e382",
+              "sourceStep": "/api/3/workflow_steps/3bdfd776-c98b-48f2-8c00-40e2b34e394a",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "f81bfe2f-b9c2-49a2-92e0-c98416a4dc2d"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+          "playbookOrigin": "/api/3/picklists/15c1e8c9-22bf-4e66-8fbb-0a502d4a4a3f",
+          "isEditable": true,
+          "uuid": "9d3b8b7f-59f7-43f8-bbc1-b30ad597a868",
+          "id": 2183,
+          "owners": [],
+          "isPrivate": false,
+          "deletedAt": null,
+          "importedBy": [],
+          "recordTags": [
+            "google-secops-siem"
+          ]
+        },
+        {
+          "@type": "Workflow",
+          "triggerLimit": null,
+          "name": "Google SecOps SIEM > Fetch",
+          "aliasName": null,
+          "tag": null,
+          "description": null,
+          "isActive": true,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": false,
+          "parameters": [
+            "macro_name"
+          ],
+          "synchronous": false,
+          "lastModifyDate": 1739776187,
+          "collection": "/api/3/workflow_collections/caa0bbda-0886-46f5-b745-d0f3518e7a2e",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/e64994ae-5ec4-4861-832b-116ea2dbd9de",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Configuration",
+              "description": null,
+              "arguments": {
+                "baselineQuery": "",
+                "timeRangeEndTime": "",
+                "timeRangeStartTime": "",
+                "alertListOptionsMaxReturnedAlerts": ""
+              },
+              "status": null,
+              "top": "160",
+              "left": "300",
+              "stepType": "/api/3/workflow_step_types/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+              "group": null,
+              "uuid": "54c1b821-23a5-46d7-b3f3-d66f051853bb"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Configure",
+              "description": null,
+              "arguments": {
+                "timeRangeEndTime": "{{arrow.utcnow().format(\"YYYY-MM-DDTHH:mm:ss\")}}Z",
+                "timeRangeStartTime": "{{vars.steps.Get_Macro_Value.data['hydra:member'][0].value or vars.timeRangeStartTime}}"
+              },
+              "status": null,
+              "top": "520",
+              "left": "120",
+              "stepType": "/api/3/workflow_step_types/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+              "group": null,
+              "uuid": "638a78e5-4167-40ff-bb75-6fa46436cd69"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Data Ingestion Override",
+              "description": null,
+              "arguments": {
+                "alertListOptionsMaxReturnedAlerts": "5"
+              },
+              "status": null,
+              "top": "640",
+              "left": "500",
+              "stepType": "/api/3/workflow_step_types/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+              "group": null,
+              "uuid": "d1cf5486-b08d-49ed-ab85-57bd5f556fe0"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Fetch Alerts",
+              "description": null,
+              "arguments": {
+                "name": "Google SecOps SIEM",
+                "config": "186cae68-e222-4950-a4e3-3a8a314430c3",
+                "params": {
+                  "baselineQuery": "{{vars.baselineQuery}}",
+                  "timeRangeEndTime": "{{vars.timeRangeEndTime}}",
+                  "timeRangeStartTime": "{{vars.timeRangeStartTime}}",
+                  "alertListOptionsMaxReturnedAlerts": "{{vars.alertListOptionsMaxReturnedAlerts}}"
+                },
+                "version": "1.0.0",
+                "connector": "google-secops-siem",
+                "operation": "legacyfetchalertsview",
+                "operationTitle": "legacyFetchAlertsView",
+                "pickFromTenant": false,
+                "step_variables": []
+              },
+              "status": null,
+              "top": "640",
+              "left": "120",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "cf398b85-07e6-4844-9c2c-37ef9eaf0d64"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Get Macro Value",
+              "description": null,
+              "arguments": {
+                "params": {
+                  "iri": "/api/wf/api/dynamic-variable/?format=json&name={{vars.input.params['macro_name'] or \"CYOPS_NULL\"}}",
+                  "body": "",
+                  "method": "GET"
+                },
+                "version": "3.2.5",
+                "connector": "cyops_utilities",
+                "operation": "make_cyops_request",
+                "operationTitle": "FSR: Make FortiSOAR API Call",
+                "step_variables": []
+              },
+              "status": null,
+              "top": "400",
+              "left": "120",
+              "stepType": "/api/3/workflow_step_types/0109f35d-090b-4a2b-bd8a-94cbc3508562",
+              "group": null,
+              "uuid": "891a40e6-62cf-489d-ad31-498004adc49f"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Is Data Ingestion",
+              "description": null,
+              "arguments": {
+                "conditions": [
+                  {
+                    "option": "Data Ingestion",
+                    "step_iri": "/api/3/workflow_steps/d1cf5486-b08d-49ed-ab85-57bd5f556fe0",
+                    "condition": "{{ vars.request.env_setup == true }}",
+                    "step_name": "Data Ingestion Override"
+                  },
+                  {
+                    "option": "Real Data",
+                    "default": true,
+                    "step_iri": "/api/3/workflow_steps/891a40e6-62cf-489d-ad31-498004adc49f",
+                    "step_name": "Get Macro Value"
+                  }
+                ],
+                "step_variables": []
+              },
+              "status": null,
+              "top": "280",
+              "left": "300",
+              "stepType": "/api/3/workflow_step_types/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+              "group": null,
+              "uuid": "2cb6a909-96d9-415d-9b6e-7159d110486d"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Return",
+              "description": null,
+              "arguments": {
+                "data": "{{vars.steps.Fetch_Alerts.data[\"alerts\"][\"alerts\"]}}"
+              },
+              "status": null,
+              "top": "760",
+              "left": "120",
+              "stepType": "/api/3/workflow_step_types/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+              "group": null,
+              "uuid": "ce9bded3-e3c5-474f-bf5e-bcdc3f68d9b3"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                  "input": {
+                    "params": []
+                  },
+                  "_configuration_schema": "[\n                {\n                    \"title\": \"baselineQuery\",\n                    \"type\": \"text\",\n                    \"name\": \"baselineQuery\",\n                    \"required\": false,\n                    \"visible\": true,\n                    \"editable\": true,\n                    \"value\": \"\"\n                },\n                {\n                    \"title\": \"alertListOptions.maxReturnedAlerts\",\n                    \"type\": \"integer\",\n                    \"name\": \"alertListOptionsMaxReturnedAlerts\",\n                    \"required\": true,\n                    \"visible\": true,\n                    \"editable\": true,\n                    \"value\": 100\n                },\n                {\n                    \"title\": \"timeRange.startTime\",\n                    \"type\": \"datetime\",\n                    \"name\": \"timeRangeStartTime\",\n                    \"required\": true,\n                    \"visible\": true,\n                    \"editable\": true,\n                    \"value\": null\n                },\n                {\n                    \"title\": \"timeRange.endTime\",\n                    \"type\": \"datetime\",\n                    \"name\": \"timeRangeEndTime\",\n                    \"required\": true,\n                    \"visible\": true,\n                    \"editable\": true,\n                    \"value\": null\n                }\n            ]"
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+              },
+              "status": null,
+              "top": "30",
+              "left": "300",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "e64994ae-5ec4-4861-832b-116ea2dbd9de"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Configuration -> Is Data Ingestion",
+              "targetStep": "/api/3/workflow_steps/2cb6a909-96d9-415d-9b6e-7159d110486d",
+              "sourceStep": "/api/3/workflow_steps/54c1b821-23a5-46d7-b3f3-d66f051853bb",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "39486420-fe8b-4f7f-a326-cb4dc2d41353"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Configure -> Fetch Alerts",
+              "targetStep": "/api/3/workflow_steps/cf398b85-07e6-4844-9c2c-37ef9eaf0d64",
+              "sourceStep": "/api/3/workflow_steps/638a78e5-4167-40ff-bb75-6fa46436cd69",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "ff0d9f56-9102-4380-9ac1-207bd948d297"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Fetch Alerts -> Return",
+              "targetStep": "/api/3/workflow_steps/ce9bded3-e3c5-474f-bf5e-bcdc3f68d9b3",
+              "sourceStep": "/api/3/workflow_steps/cf398b85-07e6-4844-9c2c-37ef9eaf0d64",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "a3ee2249-e1c6-42f6-98fb-9173c188d2e4"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Get Macro Value -> Configure",
+              "targetStep": "/api/3/workflow_steps/638a78e5-4167-40ff-bb75-6fa46436cd69",
+              "sourceStep": "/api/3/workflow_steps/891a40e6-62cf-489d-ad31-498004adc49f",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "01232ef3-9e6c-4a76-a7e8-f2f1a4bf9355"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Is Data Ingestion -> Get Macro Value",
+              "targetStep": "/api/3/workflow_steps/891a40e6-62cf-489d-ad31-498004adc49f",
+              "sourceStep": "/api/3/workflow_steps/2cb6a909-96d9-415d-9b6e-7159d110486d",
+              "label": "Real Data",
+              "isExecuted": false,
+              "group": null,
+              "uuid": "4aceb7cc-55ab-42d8-8912-b250d7e01139"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Is Data Ingestion -> Return_0",
+              "targetStep": "/api/3/workflow_steps/d1cf5486-b08d-49ed-ab85-57bd5f556fe0",
+              "sourceStep": "/api/3/workflow_steps/2cb6a909-96d9-415d-9b6e-7159d110486d",
+              "label": "Data Ingestion",
+              "isExecuted": false,
+              "group": null,
+              "uuid": "1fe82826-a293-4975-80af-9db365cda474"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Return_0 -> Fetch Alerts",
+              "targetStep": "/api/3/workflow_steps/cf398b85-07e6-4844-9c2c-37ef9eaf0d64",
+              "sourceStep": "/api/3/workflow_steps/d1cf5486-b08d-49ed-ab85-57bd5f556fe0",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "2c305cf3-6a8c-4f72-8cd2-83c76d9adb83"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Configuration",
+              "targetStep": "/api/3/workflow_steps/54c1b821-23a5-46d7-b3f3-d66f051853bb",
+              "sourceStep": "/api/3/workflow_steps/e64994ae-5ec4-4861-832b-116ea2dbd9de",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "353ec3dd-2ed8-47be-84cd-a8a13327da86"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+          "playbookOrigin": "/api/3/picklists/15c1e8c9-22bf-4e66-8fbb-0a502d4a4a3f",
+          "isEditable": true,
+          "uuid": "ca1cd7f3-850c-4ae6-b9fd-28a816058dc5",
+          "id": 2181,
+          "owners": [],
+          "isPrivate": false,
+          "deletedAt": null,
+          "importedBy": [],
+          "recordTags": [
+            "dataingestion",
+            "fetch",
+            "google-secops-siem"
+          ]
+        },
+        {
+          "@type": "Workflow",
+          "triggerLimit": null,
+          "name": "Execute API Endpoint",
+          "aliasName": null,
+          "tag": null,
+          "description": "Sends an API request to an API endpoint based on specified HTTP method, endpoint, and other input parameters that you have specified, enabling flexible API interactions tailored to user needs.",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": false,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1746523471,
+          "collection": "/api/3/workflow_collections/caa0bbda-0886-46f5-b745-d0f3518e7a2e",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/aac4ee50-6e57-462c-af2c-b96bd1033bae",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Execute API Endpoint",
+              "description": null,
+              "arguments": {
+                "name": "Google SecOps SIEM",
+                "config": "f42a5f3f-d43e-4b58-b27b-6dde7dc290b9",
+                "params": {
+                  "data": "",
+                  "method": "GET",
+                  "params": "",
+                  "apidomain": "backstory",
+                  "api_endpoint": "/images/pic.jpg"
+                },
+                "version": "1.0.0",
+                "connector": "google-secops-siem",
+                "operation": "execute_api_endpoint",
+                "operationTitle": "Execute API Endpoint",
+                "pickFromTenant": false,
+                "step_variables": []
+              },
+              "status": null,
+              "top": "165",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "62f474cc-0038-484e-bd64-e4bd6aa96946"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "route": "6eb23cf2-2c4d-4eca-b4cf-0aa288cf35ac",
+                "title": "Google SecOps SIEM: Execute API Endpoint",
+                "resources": [
+                  "alerts"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
+                "step_variables": {
+                  "input": {
+                    "params": [],
+                    "records": "{{vars.input.records}}"
+                  }
+                },
+                "triggerOnSource": true,
+                "executeButtonText": "Execute",
+                "noRecordExecution": true,
+                "showToasterMessage": {
+                  "visible": false,
+                  "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
+              },
+              "status": null,
+              "top": "30",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+              "group": null,
+              "uuid": "aac4ee50-6e57-462c-af2c-b96bd1033bae"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Execute API Endpoint",
+              "targetStep": "/api/3/workflow_steps/62f474cc-0038-484e-bd64-e4bd6aa96946",
+              "sourceStep": "/api/3/workflow_steps/aac4ee50-6e57-462c-af2c-b96bd1033bae",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "8d8b259e-5cc8-45bc-bfc8-1062b518f884"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+          "playbookOrigin": "/api/3/picklists/15c1e8c9-22bf-4e66-8fbb-0a502d4a4a3f",
+          "isEditable": true,
+          "uuid": "d69639de-3d4e-451d-8ec9-8e66c3225d1e",
+          "id": 2182,
+          "owners": [],
+          "isPrivate": false,
+          "deletedAt": null,
+          "importedBy": [],
+          "recordTags": [
+            "google-secops-siem"
+          ]
+        }
+      ]
+    }
+  ],
+  "exported_tags": [
+    "dataingestion",
+    "google-secops-siem",
+    "ingest",
+    "create",
+    "fetch"
+  ]
+}
