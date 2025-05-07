@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "label": "Google SecOps SIEM",
   "description": "Google Security Operations (SecOps) is a cloud-native security information and event management (SIEM) platform built on Google Cloud's infrastructure. It is designed to help enterprises detect, investigate, and respond to cybersecurity threats at scale and speed. By normalizing, indexing, and analyzing vast amounts of security telemetry, Google SecOps provides real-time insights into potential risks, enabling security teams to act swiftly and effectively.",
-  "publisher": "Fortinet",
+  "publisher": "Fortinet CSE",
   "icon_small_name": "small.png",
   "icon_large_name": "large.png",
   "category": [
     "Analytics and SIEM"
   ],
-  "contributor": "anonyges@gmail.com",
+  "contributor": "Daehyeob Kim",
   "active": true,
   "cs_approved": false,
   "cs_compatible": false,

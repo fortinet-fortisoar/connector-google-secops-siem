@@ -6,11 +6,12 @@ Google Security Operations (SecOps) is a cloud-native security information and e
 
 Connector Version: 1.0.0
 
-Contributor: anonyges@gmail.com
+Contributor: Daehyeob Kim
 
-Authored By: Community
+Authored By: Fortinet CSE
 
 Certified: No
+
 ## Installing the connector
 <p>From FortiSOAR&trade; 7.0.0 onwards, use the <strong>Connector Store</strong> to install the connector. For the detailed procedure to install a connector, click <a href="https://docs.fortinet.com/document/fortisoar/0.0.0/installing-a-connector/1/installing-a-connector" target="_top">here</a>.<br>You can also use the following <code>yum</code> command as a root user to install connectors from an SSH session:</p>
 `yum install cyops-connector-google-secops-siem`
